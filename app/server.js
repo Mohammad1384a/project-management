@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+const { AllRoutes } = require("./router/index.router");
 class Application {
   #express = require("express");
   #app = this.#express();
@@ -15,7 +17,6 @@ class Application {
     this.#app.use(this.#express.static(path.join(__dirname, "../public")));
   }
   configDatabase(DB_URL) {
-    const mongoose = require("mongoose");
     mongoose
       .connect(DB_URL)
       .then(() => {
@@ -27,33 +28,33 @@ class Application {
   }
   createServer(PORT) {
     const http = require("http");
-    const server = http.createServer(this.#app);
-    server.listen(PORT, () => {
+    const server = http.createServer(this.#app).listen(PORT, () => {
       console.log("listening on port " + PORT);
     });
   }
+
   createRoutes() {
-    const { AllRoutes } = require("./router/index.router");
+    this.#app.use(AllRoutes);
     this.#app.get("/", (req, res, next) => {
       res.json({
         status: 200,
         message: "hello express",
       });
-      this.#app.use(AllRoutes);
     });
   }
   errorHandler() {
+    this.#app.use((err, req, res, next) => {
+      const statusCode = err?.status ?? err?.statusCode ?? 500;
+      const errorMessage = err?.message ?? "InternalServerError";
+      return res.status(statusCode).json({
+        status: statusCode,
+        message: errorMessage,
+      });
+    });
     this.#app.use((req, res, next) => {
       return res.status(404).json({
         status: 404,
         message: "Page not found 404!",
-      });
-    });
-    this.#app.use((err, req, res, next) => {
-      const statusCode = err?.status ?? err?.statusCode ?? 500;
-      return res.status(statusCode).json({
-        statusCode,
-        message: err?.message ?? "InternalServerError",
       });
     });
   }
