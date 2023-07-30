@@ -1,7 +1,7 @@
 const { body } = require("express-validator");
 const { userModel } = require("../../models/user");
 
-function registerValidator(req, res, next) {
+function registerValidator() {
   return [
     body("username").custom(async (value) => {
       if (value) {
@@ -44,24 +44,36 @@ function registerValidator(req, res, next) {
       .withMessage("password must contain 6-16 characters")
       .custom((value, { req }) => {
         if (!value) {
-          // throw "Password cannot be empty";
-          res.status(400).json({
-            status: 400,
-            message: "password cannot be empty",
-          });
+          throw "Password cannot be empty";
         }
         if (value !== req?.body?.confirm_password) {
-          // throw "Password must be confirmed";
-          res.status(400).json({
-            status: 400,
-            message: "Password must be confirmed",
-          });
+          throw "Password must be confirmed";
         }
         return true;
       }),
   ];
 }
 
+function loginValidation() {
+  return [
+    body("username")
+      .notEmpty()
+      .withMessage("Username cannot be empty")
+      .custom(async (username) => {
+        const userRegex = /^[a-z]+[a-z0-9\_\.\-]{2,}/;
+        if (userRegex.test(username)) {
+          const userExists = await userModel.findOne({ username });
+          if (!userExists) throw "Username or password is invalid";
+          return true;
+        }
+      }),
+    body("password")
+      .isLength({ min: 6, max: 16 })
+      .withMessage("password must contain 6-16 characters"),
+  ];
+}
+
 module.exports = {
+  loginValidation,
   registerValidator,
 };
