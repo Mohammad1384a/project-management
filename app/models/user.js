@@ -2,8 +2,8 @@ const { Schema, model, default: mongoose } = require("mongoose");
 
 const userSchema = new Schema(
   {
-    first_name: { type: String },
-    last_name: { type: String },
+    first_name: { type: String, required: true },
+    last_name: { type: String, required: true },
     username: { type: String, required: true, unique: true },
     mobile: { type: String, required: true, unique: true },
     roles: { type: [String], default: ["USER"] },

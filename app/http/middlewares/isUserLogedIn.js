@@ -20,7 +20,7 @@ async function isUserLogedIn(req, res, next) {
     console.log(user);
     if (!user) throw authError;
     req.user = user;
-    return res.status(200).json(user);
+    return next();
   } catch (error) {
     next(error);
   }

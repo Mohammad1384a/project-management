@@ -15,6 +15,8 @@ function registerValidator() {
       }
       throw "Username cannot be empty";
     }),
+    body("first_name").isString().withMessage("Username must be a string"),
+    body("last_name").isString().withMessage("lastname must be a string"),
     body("email")
       .isEmail()
       .withMessage("Please enter a valid email")

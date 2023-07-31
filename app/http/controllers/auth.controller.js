@@ -7,10 +7,13 @@ const {
 class AuthController {
   async register(req, res, next) {
     try {
-      const { username, password, email, mobile } = req.body;
+      const { username, password, email, mobile, first_name, last_name } =
+        req.body;
       const hash = hashPassword(password);
       const user = await userModel.create({
         username,
+        first_name,
+        last_name,
         email,
         mobile,
         password: hash,
