@@ -12,13 +12,26 @@ function comparePassword(password, hashPassword) {
 
 function genToken(payload) {
   return jwt.sign({ payload }, process.env.SECRET_KEY, {
-    expiresIn: "2d",
+    expiresIn: "30d",
     algorithm: "HS256",
   });
+}
+
+function verifyToken(token) {
+  const result = jwt.verify(token, process.env.SECRET_KEY, {
+    algorithms: "HS256",
+  });
+  if (!result)
+    throw {
+      status: 400,
+      message: "token error from functions",
+    };
+  return result;
 }
 
 module.exports = {
   hashPassword,
   genToken,
   comparePassword,
+  verifyToken,
 };
