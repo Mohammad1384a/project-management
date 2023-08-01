@@ -17,7 +17,6 @@ async function isUserLogedIn(req, res, next) {
       { username: payload },
       { password: 0 }
     );
-    console.log(user);
     if (!user) throw authError;
     req.user = user;
     return next();

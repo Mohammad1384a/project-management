@@ -5,11 +5,13 @@ const {
   loginValidation,
 } = require("../http/validation/auth");
 const { validationMapper } = require("../http/middlewares/checkErrors");
+const { upload } = require("../modules/multer");
 const router = Router();
 
 router.post(
   "/register",
   registerValidator(),
+  upload.single("profileImage"),
   validationMapper,
   AuthController.register
 );
