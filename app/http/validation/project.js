@@ -24,6 +24,9 @@ function createProjectValidator() {
       }
       return true;
     }),
+    body("tags")
+      .isArray({ min: 0, max: 10 })
+      .withMessage("tags cannot be more than 10 items"),
   ];
 }
 

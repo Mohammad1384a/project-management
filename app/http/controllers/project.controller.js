@@ -2,7 +2,7 @@ const { projectModel } = require("../../models/project");
 class ProjectController {
   async createProject(req, res, next) {
     try {
-      const { title, text } = req.body;
+      const { title, text, tags } = req.body;
       const owner = req.user._id;
       const imageAddress =
         req.protocol +
@@ -14,6 +14,7 @@ class ProjectController {
         title,
         text,
         projectImage: imageAddress,
+        tags,
         owner,
       });
       if (!project) {
@@ -30,7 +31,21 @@ class ProjectController {
       next(error);
     }
   }
-  getAllProjects() {}
+  async getAllProjects(req, res, next) {
+    try {
+      owner = req.user._id;
+      const projects = await projectModel.find({ owner });
+      if (!projects) {
+        throw "You have no project";
+      }
+      return res.status(200).json({
+        status: 200,
+        projects,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   getProjectById() {}
   getAllProjectsOfTeam() {}
   getProjectsOfUser() {}
