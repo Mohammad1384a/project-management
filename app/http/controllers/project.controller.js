@@ -46,11 +46,52 @@ class ProjectController {
       next(error);
     }
   }
-  getProjectById() {}
+  async getProjectById(req, res, next) {
+    try {
+      const id = req.params?.id;
+      const owner = req.user?._id;
+      const project = await projectModel.findOne({ owner, _id: id });
+      if (!project) {
+        throw "project not found";
+      }
+      return res.status(200).json({
+        status: 200,
+        project,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async removeProjectById(req, res, next) {
+    try {
+      const id = req.params?.id;
+      const owner = req.user?._id;
+      const deleteProject = await projectModel.deleteOne({ _id: id, owner });
+      if (deleteProject.deletedCount === 0) throw "deletion failed";
+      return res.status(200).json({
+        status: 200,
+        message: "project removed successfully",
+        deleteProject,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getProjectsOfUser(req, res, next) {
+    try {
+      const owner = req.user?._id;
+      const userProjects = await projectModel.find({ owner });
+      if (!userProjects) throw "you have no project";
+      return res.status(200).json({
+        status: 200,
+        userProjects,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   getAllProjectsOfTeam() {}
-  getProjectsOfUser() {}
   updateProject() {}
-  removeProject() {}
 }
 
 module.exports = new ProjectController();

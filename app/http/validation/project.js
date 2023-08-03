@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 const path = require("path");
 
 function createProjectValidator() {
@@ -30,6 +30,11 @@ function createProjectValidator() {
   ];
 }
 
+function mongoIdValidator() {
+  return [param("id").isMongoId().withMessage("please enter a valid mongo id")];
+}
+
 module.exports = {
   createProjectValidator,
+  mongoIdValidator,
 };
