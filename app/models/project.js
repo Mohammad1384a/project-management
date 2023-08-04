@@ -4,7 +4,7 @@ const projectSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     text: { type: String },
-    projectImage: { type: String },
+    projectImage: { type: String, required: false },
     owner: { type: mongoose.Types.ObjectId, required: true },
     team: { type: mongoose.Types.ObjectId },
     isPrivate: { type: Boolean, default: true },

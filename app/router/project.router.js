@@ -2,7 +2,7 @@ const { Router } = require("express");
 const { upload } = require("../modules/multer");
 const { isUserLogedIn } = require("../http/middlewares/isUserLogedIn");
 const {
-  createProjectValidator,
+  ProjectValidator,
   mongoIdValidator,
 } = require("../http/validation/project");
 const { validationMapper } = require("../http/middlewares/checkErrors");
@@ -14,7 +14,7 @@ router.post(
   "/create",
   isUserLogedIn,
   upload.single("projectImage"),
-  createProjectValidator(),
+  ProjectValidator(),
   validationMapper,
   ProjectController.createProject
 );
@@ -50,6 +50,14 @@ router.get(
   projectController.getProjectsOfUser
 );
 
-router.get;
+router.put(
+  "/edit/:id",
+  isUserLogedIn,
+  mongoIdValidator(),
+  upload.single("projectImage"),
+  ProjectValidator(),
+  validationMapper,
+  projectController.updateProject
+);
 
 module.exports = router;

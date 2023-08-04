@@ -90,8 +90,42 @@ class ProjectController {
       next(error);
     }
   }
+  async updateProject(req, res, next) {
+    try {
+      const _id = req.params.id;
+      const owner = req.user?._id;
+      const isProjectValid = await projectModel.findOne({ _id, owner });
+      if (!isProjectValid) throw "project not found";
+      const imageAddress =
+        req.protocol +
+        "://" +
+        req.get("host") +
+        "/" +
+        req.file?.path?.substring(7).replace(/[\\\\]/gm, "/");
+      let data = { ...req.body };
+      data.projectImage = imageAddress;
+      Object.entries(data).forEach(([key, value]) => {
+        const validEntries = ["text", "title", "tags", "projectImage"];
+        if (!validEntries.includes(key)) {
+          delete data[key];
+        }
+      });
+      const result = data.tags.filter((t) => t.length > 0);
+      data.tags = result;
+      const updateProject = await projectModel.updateOne(
+        { _id },
+        { $set: data }
+      );
+      if (updateProject.modifiedCount === 0) throw "updating project failed";
+      return res.status(200).json({
+        status: 200,
+        updateProject,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   getAllProjectsOfTeam() {}
-  updateProject() {}
 }
 
 module.exports = new ProjectController();

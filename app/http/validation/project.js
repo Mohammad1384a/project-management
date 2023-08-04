@@ -1,7 +1,7 @@
 const { body, param } = require("express-validator");
 const path = require("path");
 
-function createProjectValidator() {
+function ProjectValidator() {
   return [
     body("title")
       .notEmpty()
@@ -10,6 +10,7 @@ function createProjectValidator() {
       .isLength({ min: 15 })
       .withMessage("Project description should at least contain 15 characters"),
     body("projectImage").custom((image, { req }) => {
+      if (!req.file) return true;
       if (Object.keys(req.file).length == 0) {
         throw "Please select a file";
       }
@@ -35,6 +36,6 @@ function mongoIdValidator() {
 }
 
 module.exports = {
-  createProjectValidator,
+  ProjectValidator,
   mongoIdValidator,
 };
