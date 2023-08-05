@@ -39,8 +39,48 @@ class TeamController {
       next(error);
     }
   }
+  async getTeamById(req, res, next) {
+    try {
+      const _id = req.params.id;
+      const team = await teamModel.find({ _id });
+      if (!team)
+        throw {
+          status: 400,
+          message: "not found team",
+        };
+      return res.status(200).json({
+        status: 200,
+        team,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async removeTeamById(req, res, next) {
+    try {
+      const owner = req.user._id;
+      const _id = req.params.id;
+      const team = await teamModel.findOne({ _id, owner });
+      if (!team)
+        throw {
+          status: 404,
+          message: "not found team",
+        };
+      const removeTeam = await teamModel.deleteOne({ _id, owner });
+      if (removeTeam.deletedCount == 0)
+        throw {
+          status: 500,
+          message: "removing team failed",
+        };
+      return res.status(200).json({
+        status: 200,
+        removeTeam,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   inviteUser() {}
-  removeTeamById() {}
   updateTeam() {}
   removeUserFromTeam() {}
 }

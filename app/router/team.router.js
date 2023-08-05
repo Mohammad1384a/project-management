@@ -4,6 +4,7 @@ const { isUserLogedIn } = require("../http/middlewares/isUserLogedIn");
 const { validationMapper } = require("../http/middlewares/checkErrors");
 const teamController = require("../http/controllers/team.controller");
 const { createTeamValidator } = require("../http/validation/team");
+const { mongoIdValidator } = require("../http/validation/project");
 
 router.post(
   "/create",
@@ -18,6 +19,22 @@ router.get(
   isUserLogedIn,
   validationMapper,
   teamController.getTeamsList
+);
+
+router.get(
+  "/:id",
+  isUserLogedIn,
+  mongoIdValidator,
+  validationMapper,
+  teamController.getTeamById
+);
+
+router.delete(
+  "/remove/:id",
+  isUserLogedIn,
+  mongoIdValidator(),
+  validationMapper,
+  teamController.removeTeamById
 );
 
 module.exports = router;
