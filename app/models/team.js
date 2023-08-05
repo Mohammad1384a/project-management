@@ -6,6 +6,7 @@ const teamSchema = new mongoose.Schema(
     descriptiotn: { type: String },
     users: { type: [mongoose.Types.ObjectId], default: [] },
     owner: { type: mongoose.Types.ObjectId, required: true },
+    projects: { type: [mongoose.Types.ObjectId], default: [], required: false },
   },
   {
     timestamps: true,
