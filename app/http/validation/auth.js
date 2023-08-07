@@ -62,7 +62,7 @@ function loginValidation() {
       .notEmpty()
       .withMessage("Username cannot be empty")
       .custom(async (username) => {
-        const userRegex = /^[a-z]+[a-z0-9\_\.\-]{2,}/;
+        const userRegex = /^[a-z]+[a-z0-9\_\.\-]{2,12}/;
         if (userRegex.test(username)) {
           const userExists = await userModel.findOne({ username });
           if (!userExists) throw "Username or password is invalid";

@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const { mongoIdValidator } = require("../http/validation/project");
 const UserController = require("../http/controllers/user.controller");
 const { isUserLogedIn } = require("../http/middlewares/isUserLogedIn");
 const { validationMapper } = require("../http/middlewares/checkErrors");
@@ -15,6 +16,28 @@ router.post(
   imageValidator(),
   validationMapper,
   UserController.uploadImage
+);
+
+router.get(
+  "/requests",
+  isUserLogedIn,
+  validationMapper,
+  UserController.getRequests
+);
+
+router.get(
+  "/requests/:status",
+  isUserLogedIn,
+  validationMapper,
+  UserController.getSpecificRquest
+);
+
+router.post(
+  "/requests/:status/:id",
+  isUserLogedIn,
+  mongoIdValidator(),
+  validationMapper,
+  UserController.changeInvitationStatus
 );
 
 module.exports = router;

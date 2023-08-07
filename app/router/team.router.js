@@ -24,7 +24,7 @@ router.get(
 router.get(
   "/:id",
   isUserLogedIn,
-  mongoIdValidator,
+  mongoIdValidator(),
   validationMapper,
   teamController.getTeamById
 );
@@ -35,6 +35,14 @@ router.delete(
   mongoIdValidator(),
   validationMapper,
   teamController.removeTeamById
+);
+
+router.post(
+  "/:id/:username",
+  isUserLogedIn,
+  mongoIdValidator(),
+  validationMapper,
+  teamController.inviteUser
 );
 
 module.exports = router;
