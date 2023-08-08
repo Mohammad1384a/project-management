@@ -138,7 +138,28 @@ class TeamController {
       next(error);
     }
   }
-  updateTeam() {}
+  async updateTeam(req, res, next) {
+    try {
+      const { name, description } = req.body;
+      const { id } = req.params;
+      await findTeam(req, res, next);
+      const update = await teamModel.updateOne(
+        { _id: id },
+        { $set: { name, description } }
+      );
+      if (update.modifiedCount === 0)
+        throw {
+          status: 500,
+          message: "updating team failed",
+        };
+      return res.status(200).json({
+        status: 200,
+        update,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   removeUserFromTeam() {}
 }
 

@@ -3,7 +3,10 @@ const router = Router();
 const { isUserLogedIn } = require("../http/middlewares/isUserLogedIn");
 const { validationMapper } = require("../http/middlewares/checkErrors");
 const teamController = require("../http/controllers/team.controller");
-const { createTeamValidator } = require("../http/validation/team");
+const {
+  createTeamValidator,
+  updateTeamValidator,
+} = require("../http/validation/team");
 const { mongoIdValidator } = require("../http/validation/project");
 
 router.post(
@@ -43,6 +46,15 @@ router.post(
   mongoIdValidator(),
   validationMapper,
   teamController.inviteUser
+);
+
+router.put(
+  "/edit/:id",
+  isUserLogedIn,
+  mongoIdValidator(),
+  updateTeamValidator(),
+  validationMapper,
+  teamController.updateTeam
 );
 
 module.exports = router;

@@ -16,6 +16,18 @@ function createTeamValidator() {
   ];
 }
 
+function updateTeamValidator() {
+  return [
+    body("name")
+      .isLength({ min: 5, max: 10 })
+      .withMessage("team name should be between 5 and 10 characters"),
+    body("description")
+      .notEmpty()
+      .withMessage("team description should not be empty"),
+  ];
+}
+
 module.exports = {
   createTeamValidator,
+  updateTeamValidator,
 };
